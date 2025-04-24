@@ -1,0 +1,11 @@
+# Terraform state
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+
+# Terraform plan files
+*.tfplan
+
+# Dependency lock file (optional, ignore if not pinning provider versions)
+.terraform.lock.hcl
+.terraform.tfstate.lock.info
