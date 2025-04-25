@@ -1,10 +1,10 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
-def load_model(model_name="distilgpt2"):
+def load_model(model_name="PygmalionAI/Pygmalion-3-12B"):
     print("Loading model... 🧠")
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(model_name)
+    model = AutoModelForCausalLM.from_pretrained(model_name, low_cpu_mem_usage=True)
     model.eval()
     return tokenizer, model
 
@@ -26,6 +26,7 @@ def generate_response(prompt, tokenizer, model):
 def chatbot():
     tokenizer, model = load_model()
     print("Hi! I'm powered by GPT 🤖")
+
     history = ""
 
     while True:

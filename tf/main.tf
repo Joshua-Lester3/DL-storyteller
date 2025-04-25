@@ -82,7 +82,8 @@ resource "azurerm_linux_virtual_machine" "lnx-tf-vm" {
   location              = azurerm_resource_group.rg.location
   resource_group_name   = azurerm_resource_group.rg.name
   network_interface_ids = [azurerm_network_interface.terraform_nic.id]
-  size                  = "Standard_B2s"
+  # size                  = "Standard_B2s"
+  size                  = "Standard_NC4as_T4_v3"
 
   os_disk {
     name                 = "lnx-tf-vm-osdisk"
@@ -91,9 +92,9 @@ resource "azurerm_linux_virtual_machine" "lnx-tf-vm" {
   }
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts-gen2"
+    publisher = "microsoft-dsvm"
+    offer     = "ubuntu-hpc"
+    sku       = "2204"
     version   = "latest"
   }
 
