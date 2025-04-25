@@ -1,10 +1,33 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
+from huggingface_hub import snapshot_download
+import os
 
 def load_model(model_name="PygmalionAI/Pygmalion-3-12B"):
     print("Loading model... 🧠")
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(model_name, low_cpu_mem_usage=True)
+
+    model_dir = "/mnt/models/pygmalion"
+
+    if not os.path.isdir(model_dir) or not os.path.exists(os.path.join(model_dir, "config.json")):
+        print("Model not found locally - downloading to persistent disk...")
+        model_path = snapshot_download(
+            repo_id=model_name,
+            local_dir=model_dir,
+            local_dir_use_symlinks=False,
+            resume_download=True
+        )
+    else:
+        print("Found model at:", model_dir)
+        model_path = model_dir
+
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
+    model = AutoModelForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True)
+
+    print("CUDA available:", torch.cuda.is_available())
+    print("GPU name:", torch.cuda.get_device_name(0) if torch.cuda.is_available() else "None")
+
+    if torch.cuda.is_available():
+        model = model.to("cuda")
     model.eval()
     return tokenizer, model
 
@@ -25,19 +48,17 @@ def generate_response(prompt, tokenizer, model):
 
 def chatbot():
     tokenizer, model = load_model()
-    print("Hi! I'm powered by GPT 🤖")
-
     history = ""
 
     while True:
         user_input = input("You: ")
         if user_input.lower() in {"bye", "exit", "quit"}:
-            print("GPT: See you later! 👋")
+            print("Pygmalion: See you later! 👋")
             break
 
-        history += f"You: {user_input}\nGPT:"
+        history += f"You: {user_input}\nPygmalion:"
         response = generate_response(history, tokenizer, model)
-        print(f"GPT: {response}")
+        print(f"Pygmalion: {response}")
         history += f" {response}\n"
 
 if __name__ == "__main__":

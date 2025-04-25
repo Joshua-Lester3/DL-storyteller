@@ -106,4 +106,27 @@ resource "azurerm_linux_virtual_machine" "lnx-tf-vm" {
     username   = "azureuser"
     public_key = file(pathexpand("~/.ssh/azure-vm-rsa.pub"))
   }
+
+  custom_data = filebase64("../scripts/cloud-init.sh")
+}
+
+# 🔒 Managed Data Disk
+resource "azurerm_managed_disk" "data_disk" {
+  name                 = "ml-model-disk"
+  location             = azurerm_resource_group.rg.location
+  resource_group_name  = azurerm_resource_group.rg.name
+  storage_account_type = "Standard_LRS"
+  create_option        = "Empty"
+  disk_size_gb         = 100 # change based on your model size
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "attach" {
+  managed_disk_id    = azurerm_managed_disk.data_disk.id
+  virtual_machine_id = azurerm_linux_virtual_machine.lnx-tf-vm.id
+  lun                = 0
+  caching            = "ReadWrite"
 }
