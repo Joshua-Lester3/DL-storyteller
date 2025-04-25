@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Updating system packages..."
-
+sudo apt-mark hold linux-image-azure linux-headers-azure linux-modules-azure
 sudo apt update && sudo apt upgrade -y
 
 echo "Installing Python and pip..."

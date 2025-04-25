@@ -34,10 +34,10 @@ def chatbot():
             print("GPT: See you later! 👋")
             break
 
-        # history += f"You: {user_input}\nGPT:"
-        # response = generate_response(history, tokenizer, model)
-        # print(f"GPT: {response}")
-        # history += f" {response}\n"
+        history += f"You: {user_input}\nGPT:"
+        response = generate_response(history, tokenizer, model)
+        print(f"GPT: {response}")
+        history += f" {response}\n"
 
 if __name__ == "__main__":
     chatbot()

@@ -82,12 +82,12 @@ resource "azurerm_linux_virtual_machine" "lnx-tf-vm" {
   location              = azurerm_resource_group.rg.location
   resource_group_name   = azurerm_resource_group.rg.name
   network_interface_ids = [azurerm_network_interface.terraform_nic.id]
-  size                  = "Standard_F4s"
+  size                  = "Standard_B2s"
 
   os_disk {
     name                 = "lnx-tf-vm-osdisk"
     caching              = "ReadWrite"
-    storage_account_type = "Premium_LRS"
+    storage_account_type = "Standard_LRS"
   }
 
   source_image_reference {

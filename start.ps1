@@ -24,3 +24,5 @@ ssh -i $key azureuser@$ip
 cd .\tf
 
 terraform destroy -auto-approve
+
+cd ..
