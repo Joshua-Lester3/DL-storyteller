@@ -9,6 +9,8 @@ sudo apt install -y python3 python3-pip git python3.10-venv
 
 echo "Cloning app repo..."
 git clone https://github.com/Joshua-Lester3/DL-storyteller.git
+git reset --hard
+git pull
 
 echo "Installing Python dependencies..."
 cd DL-storyteller/src
