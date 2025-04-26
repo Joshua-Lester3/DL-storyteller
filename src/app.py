@@ -3,7 +3,7 @@ import torch
 from huggingface_hub import snapshot_download
 import os
 import accelerate
-import auto-gptq
+import auto_gptq
 
 def load_model(model_name="PygmalionAI/Pygmalion-3-12B-GPTQ"):
     print("Loading model... 🧠")
