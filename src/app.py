@@ -1,10 +1,11 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, TextStreamer
 import torch
 from huggingface_hub import snapshot_download
 import os
 import accelerate
+import auto-gptq
 
-def load_model(model_name="PygmalionAI/Pygmalion-3-12B"):
+def load_model(model_name="PygmalionAI/Pygmalion-3-12B-GPTQ"):
     print("Loading model... 🧠")
 
     model_dir = "/mnt/models/pygmalion"
@@ -21,11 +22,10 @@ def load_model(model_name="PygmalionAI/Pygmalion-3-12B"):
         print("Found model at:", model_dir)
         model_path = model_dir
 
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
-    model = AutoModelForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, torch_dtype=torch.float16, device_map="auto")
-
-    print("CUDA available:", torch.cuda.is_available())
-    print("GPU name:", torch.cuda.get_device_name(0) if torch.cuda.is_available() else "None")
+    tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
+    model = AutoModelForCausalLM.from_pretrained(model_path, use_safetensors=True,
+                device="cuda:0" if torch.cuda.is_available() else "cpu", trust_remote_code=True,
+                low_cpu_mem_usage=True, torch_dtype=torch.float16, device_map="auto")
 
     model.eval()
     return tokenizer, model
@@ -33,11 +33,9 @@ def load_model(model_name="PygmalionAI/Pygmalion-3-12B"):
 def generate_response(prompt, tokenizer, model):
     inputs = tokenizer.encode(prompt, return_tensors="pt")
 
-    if hasattr(model, 'hf_device_map'):
-        first_device = list(model.hf_device_map.values())[0]
-    else:
-        first_device = model.device
-    inputs = inputs.to(first_device)
+    device = model.device if hasattr(model, 'device') else torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+    inputs = inputs.to(device)
 
     with torch.no_grad():
         outputs = model.generate(
