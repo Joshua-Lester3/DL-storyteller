@@ -3,7 +3,7 @@ import torch
 from huggingface_hub import snapshot_download
 import os
 import accelerate
-import auto_gptq
+from auto_gptq import AutoGPTQForCausalLM
 
 def load_model(model_name="PygmalionAI/Pygmalion-3-12B-GPTQ"):
     print("Loading model... 🧠")
@@ -23,9 +23,10 @@ def load_model(model_name="PygmalionAI/Pygmalion-3-12B-GPTQ"):
         model_path = model_dir
 
     tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
-    model = AutoModelForCausalLM.from_pretrained(model_path, use_safetensors=True,
+
+    model = AutoModelForCausalLM.from_quantized(model_path, use_safetensors=True,
                 device="cuda:0" if torch.cuda.is_available() else "cpu", trust_remote_code=True,
-                low_cpu_mem_usage=True, torch_dtype=torch.float16, device_map="auto")
+                low_cpu_mem_usage=True, torch_dtype=torch.float16)
 
     model.eval()
     return tokenizer, model

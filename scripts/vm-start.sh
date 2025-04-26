@@ -17,4 +17,4 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 echo "Running Python app..."
-sudo ~/DL-storyteller/.venv/bin/python3 app.py
+sudo ~/DL-storyteller/.venv/bin/python app.py
