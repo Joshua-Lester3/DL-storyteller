@@ -83,7 +83,7 @@ resource "azurerm_linux_virtual_machine" "lnx-tf-vm" {
   resource_group_name   = azurerm_resource_group.rg.name
   network_interface_ids = [azurerm_network_interface.terraform_nic.id]
   # size                  = "Standard_B2s"
-  size                  = "Standard_NC4as_T4_v3"
+  size                  = "Standard_NC8as_T4_v3"
 
   os_disk {
     name                 = "lnx-tf-vm-osdisk"
@@ -118,10 +118,6 @@ resource "azurerm_managed_disk" "data_disk" {
   storage_account_type = "Standard_LRS"
   create_option        = "Empty"
   disk_size_gb         = 100 # change based on your model size
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "attach" {
