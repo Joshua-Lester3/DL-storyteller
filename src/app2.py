@@ -8,7 +8,7 @@ def load_model():
     model_dir = os.path.expanduser("~/models")
 
     model_path = hf_hub_download(
-        repo_id="PygmalionAI/Pygmalion-3-12B-Q3_K",
+        repo_id="PygmalionAI/Pygmalion-3-12B-GGUF",
         filename="Pygmalion-3-12B-Q3_K.gguf",
         local_dir=model_dir,
         cache_dir=model_dir,

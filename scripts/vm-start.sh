@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -euxo pipefail
-
 echo "Updating system packages..."
 sudo apt-mark hold linux-image-azure linux-headers-azure
 sudo apt update && sudo apt upgrade -y
@@ -22,4 +20,4 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 echo "Running Python app..."
-~/DL-storyteller/.venv/bin/python3 app2.py
+~/DL-storyteller/src/.venv/bin/python3 app2.py
