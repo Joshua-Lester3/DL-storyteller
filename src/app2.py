@@ -1,4 +1,4 @@
-from ollama import pull, generate
+from ollama import create, generate
 import os
 from huggingface_hub import hf_hub_download
 
@@ -24,7 +24,7 @@ def ensure_model(model_path, model_alias):
     If already present, this is a no-op.
     """
     print(f"Ensuring Ollama model '{model_alias}' from '{model_path}'...")
-    pull(model=model_path, name=model_alias)
+    create(model=model_alias, from_=model_path)
     print(f"Model '{model_alias}' is ready to use.")
 
 
