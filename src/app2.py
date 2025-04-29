@@ -26,7 +26,7 @@ def ensure_model(model_path, model_alias):
     print(f"Ensuring Ollama model '{model_alias}' from '{model_path}'...")
     client = Client()
     digest = client.create_blob(model_path)
-    create(model=model_alias, file={model_alias: digest})
+    create(model=model_alias, files={model_alias: digest})
     print(f"Model '{model_alias}' is ready to use.")
 
 
