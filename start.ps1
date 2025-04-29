@@ -15,7 +15,7 @@ if (-not ($output -match "azurerm_linux_virtual_machine")) {
 
     terraform apply tp.tfplan
 
-    
+
 } else {
     echo "Terraform project already initialized. Starting up VM..."
 }
@@ -32,20 +32,11 @@ $ip = az vm list-ip-addresses --resource-group $rg --name $vm_name `
 cd ..
 
 dos2unix .\scripts\vm-start.sh
-dos2unix .\scripts\cloud-init.sh
 
 # Get-Content .\scripts\vm-start.sh | ssh -i $key azureuser@$ip 'bash -s'
 
 scp -i $key `
-    -o IdentitiesOnly=yes `
-    -o StrictHostKeyChecking=no `
-    -o UserKnownHostsFile=/dev/null `
     .\scripts\vm-start.sh "azureuser@${ip}:~/vm-start.sh"
-scp -i $key `
-    -o IdentitiesOnly=yes `
-    -o StrictHostKeyChecking=no `
-    -o UserKnownHostsFile=/dev/null `
-    .\scripts\cloud-init.sh "azureuser@${ip}:~/cloud-init.sh"
 
 ssh -i $key azureuser@$ip
 
