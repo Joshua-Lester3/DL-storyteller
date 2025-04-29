@@ -1,4 +1,4 @@
-from ollama import create, generate
+from ollama import create, generate, Client
 import os
 from huggingface_hub import hf_hub_download
 
@@ -24,7 +24,9 @@ def ensure_model(model_path, model_alias):
     If already present, this is a no-op.
     """
     print(f"Ensuring Ollama model '{model_alias}' from '{model_path}'...")
-    create(model=model_alias, path=model_path)
+    client = Client()
+    digest = client.create_blob(model_path)
+    create(model=model_alias, file={model_alias: digest})
     print(f"Model '{model_alias}' is ready to use.")
 
 
