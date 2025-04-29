@@ -38,7 +38,7 @@ def generate_response(prompt: str, model_alias: str) -> str:
         model=model_alias,
         prompt=prompt,
     )
-    return resp.message.content.strip()
+    return resp['response'].strip()
 
 
 def chatbot():
