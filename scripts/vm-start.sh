@@ -49,7 +49,7 @@ if lsof -iTCP:"$PORT" -sTCP:LISTEN &>/dev/null; then
   echo "✓ Ollama server already listening on port $PORT."
 else
   echo "Starting Ollama server on port $PORT..."
-  nohup ollama serve >"$LOGFILE" 2>&1 &
+  nohup ollama serve --gpu >"$LOGFILE" 2>&1 &
   # give it a moment to bind
   sleep 2
   if lsof -iTCP:"$PORT" -sTCP:LISTEN &>/dev/null; then

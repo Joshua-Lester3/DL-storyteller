@@ -43,10 +43,10 @@ def chatbot():
     # Path to your local GGUF model file
     model_path = load_model()
     # Alias under which Ollama will store the model
-    model_alias = "Pygmalion-3-12B-Q3_K.gguf"
+    model_alias = "pygmalion-q3k"
 
     # Ensure the model is available in Ollama
-    # ensure_model(model_path, model_alias)
+    ensure_model(model_path, model_alias)
 
     print("Welcome to Pygmalion (via Ollama)! Type 'quit' to exit.")
     while True:
