@@ -1,17 +1,17 @@
 from ollama import pull, generate
 import os
-from huggingface_hub import snapshot_download
+from huggingface_hub import hf_hub_download
 
-def load_model(model_name="PygmalionAI/Pygmalion-3-12B-GGUF"):
+def load_model():
     print("Loading model... 🧠")
 
     model_dir = os.path.expanduser("~/models")
 
-    model_path = snapshot_download(
-        repo_id=model_name,
+    model_path = hf_hub_download(
+        repo_id="PygmalionAI/Pygmalion-3-12B-Q3_K",
+        filename="Pygmalion-3-12B-Q3_K.gguf",
         local_dir=model_dir,
-        local_dir_use_symlinks=False,
-        resume_download=True
+        cache_dir=model_dir,
     )
 
     print(f"model is ready at: {model_path}")
