@@ -43,7 +43,7 @@ def chatbot():
     # Path to your local GGUF model file
     model_path = load_model()
     # Alias under which Ollama will store the model
-    model_alias = "pygmalion-3-12b-gguf"
+    model_alias = "Pygmalion-3-12B-Q3_K.gguf"
 
     # Ensure the model is available in Ollama
     # ensure_model(model_path, model_alias)
