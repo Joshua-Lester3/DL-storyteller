@@ -50,7 +50,7 @@ def chatbot():
     model_alias = "pygmalion-3-12b-gguf"
 
     # Ensure the model is available in Ollama
-    ensure_model(model_path, model_alias)
+    # ensure_model(model_path, model_alias)
 
     print("Welcome to Pygmalion (via Ollama)! Type 'quit' to exit.")
     while True:
