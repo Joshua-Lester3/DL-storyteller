@@ -24,7 +24,7 @@ def ensure_model(model_path, model_alias):
     If already present, this is a no-op.
     """
     print(f"Ensuring Ollama model '{model_alias}' from '{model_path}'...")
-    create(model=model_alias, from_=model_path)
+    create(model=model_alias, path=model_path)
     print(f"Model '{model_alias}' is ready to use.")
 
 
@@ -43,7 +43,7 @@ def chatbot():
     # Path to your local GGUF model file
     model_path = load_model()
     # Alias under which Ollama will store the model
-    model_alias = "pygmalion-q3k:latest"
+    model_alias = "Pygmalion-3-12B-Q3_K.gguf"
 
     # Ensure the model is available in Ollama
     ensure_model(model_path, model_alias)
