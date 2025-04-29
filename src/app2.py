@@ -35,10 +35,6 @@ def generate_response(prompt: str, model_alias: str) -> str:
     resp = generate(
         model=model_alias,
         prompt=prompt,
-        max_tokens=50,
-        temperature=0.8,
-        top_p=0.95,
-        stop=["\n"]
     )
     return resp.message.content.strip()
 
