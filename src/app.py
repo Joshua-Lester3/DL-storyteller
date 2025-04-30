@@ -56,6 +56,7 @@ class TextPagerApp(App[None]):
         self.pages = pages
         self.current_index = 0
         self.chatbot = chatbot
+        self.first_prompt = True
 
     def compose(self) -> ComposeResult:
         page = self.pages[self.current_index]
@@ -116,10 +117,13 @@ class TextPagerApp(App[None]):
         # Add input text as a new page and display it
         prompt = event.value.strip()
         if not prompt:
-            prompt = "You are a dungeon master in a fantasy text adventure. Respond to the player's commands with vivid, " \
-            "story-driven descriptions and react to their actions. Keep the world internally consistent. " \
-            "Do not advance time unless the player acts. Never take control of the player's character. " \
-            "The story begins with the player in a cave chained to a wall. Begin"
+            if self.first_prompt:    
+                prompt = "You are a dungeon master in a fantasy text adventure. Respond to the player's commands with vivid, " \
+                "story-driven descriptions and react to their actions. Keep the world internally consistent. " \
+                "Do not advance time unless the player acts. Never take control of the player's character. " \
+                "The story begins with the player in a cave chained to a wall. Begin"
+            else:
+                return
         
         # Show spinner while waiting
         spinner = self.query_one(LoadingIndicator)

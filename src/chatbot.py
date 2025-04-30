@@ -1,4 +1,4 @@
-from ollama import create, generate, Client
+from ollama import create, generate, Client, chat
 import os
 import subprocess
 from huggingface_hub import hf_hub_download
@@ -10,6 +10,8 @@ class ChatBot():
         model_path = self.load_model()
         # Alias under which Ollama will store the model
         self.model_alias = "Pygmalion-3-12B-Q3_K.gguf"
+
+        self.chat_history = []
 
         # Ensure the model is available in Ollama
         self.ensure_model(model_path)   
@@ -82,9 +84,11 @@ class ChatBot():
         """
         Generates a one-shot response using Ollama's generate API.
         """
-        resp = generate(
+        message = {"role": "user", "content": prompt}
+
+        resp = chat(
             model=self.model_alias,
-            prompt=prompt,
+            messages=[*self.chat_history, message],
             options={
                 "gpu_layers": 99,  # Use as many layers on GPU as possible
                 "temperature": 0.7,
@@ -92,4 +96,27 @@ class ChatBot():
                 "num_predict": 2048  # Max tokens to generate
             }
         )
+
+        # resp = generate(
+        #     model=self.model_alias,
+        #     prompt=prompt,
+        #     options={
+        #         "gpu_layers": 99,  # Use as many layers on GPU as possible
+        #         "temperature": 0.7,
+        #         "top_p": 0.9,
+        #         "num_predict": 2048  # Max tokens to generate
+        #     }
+        # )
+        
+        assistant_message = resp['message']
+
+        if 'role' not in assistant_message or assistant_message['role'] != 'assistant':
+            assistant_message = {
+                "role": "assistant",
+                "content": assistant_message['content']
+            }
+
+        self.chat_history.append(message)
+        self.chat_history.append(assistant_message)
+
         return resp['response'].strip()
