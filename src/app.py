@@ -116,7 +116,10 @@ class TextPagerApp(App[None]):
         # Add input text as a new page and display it
         prompt = event.value.strip()
         if not prompt:
-            return
+            prompt = "You are a dungeon master in a fantasy text adventure. Respond to the player's commands with vivid, " \
+            "story-driven descriptions and react to their actions. Keep the world internally consistent. " \
+            "Do not advance time unless the player acts. Never take control of the player's character. " \
+            "The story begins with the player in a cave chained to a wall. Begin"
         
         # Show spinner while waiting
         spinner = self.query_one(LoadingIndicator)
@@ -145,7 +148,7 @@ if __name__ == "__main__":
     chatbot = ChatBot()
     # Initialize with only the first page
     sample_pages = [
-        { "response": "Hello, welcome to our text adventure app. This is powered by Ollama and PygmalionAI. Enter a prompt below to start. Use arrow keys to navigate between pages.",
+        { "response": "Hello, welcome to our text adventure app. This is powered by Ollama and PygmalionAI. Press enter below to start. Use arrow keys to navigate between pages.",
          "prompt": None
         }
     ]
