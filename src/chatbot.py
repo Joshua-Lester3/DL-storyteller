@@ -41,7 +41,14 @@ class ChatBot():
         print(f"Ensuring Ollama model '{self.model_alias}' from '{model_path}'...")
         client = Client()
         digest = client.create_blob(model_path)
-        create(model=self.model_alias, files={self.model_alias: digest})
+
+        modelfile_content = f"""
+              FROM {self.model_alias}
+              PARAMETER temperature 0.7
+              PARAMETER top_p 0.9
+              PARAMETER gpu_layers 99
+        """
+        create(model=self.model_alias, modelfile=modelfile_content, files={self.model_alias: digest})
         print(f"Model '{self.model_alias}' is ready to use.")
 
 

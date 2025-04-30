@@ -1,0 +1,51 @@
+GPU SUPPORT CHECKER
+==================================================
+Platform: Linux 5.15.0-1074-azure
+Python version: 3.10.12
+Running in container: False
+
+==================================================
+CPU cores: 8 physical, 8 logical
+RAM: 54.92 GB total
+RAM usage: 2.3%
+Disk: 61.84 GB total
+Disk usage: 94.0%
+
+==================================================
+nvidia-smi found and working:
+['Wed Apr 30 19:46:58 2025       ', '+-----------------------------------------------------------------------------------------+', '| NVIDIA-SMI 560.35.03              Driver Version: 560.35.03      CUDA Version: 12.6     |', '|-----------------------------------------+------------------------+----------------------+', '| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |', '| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |', '|                                         |                        |               MIG M. |', '|=========================================+========================+======================|', '|   0  Tesla T4                       Off |   00000001:00:00.0 Off |                  Off |', '| N/A   32C    P8             11W /   70W |       3MiB /  16384MiB |      0%      Default |']
+
+==================================================
+PyTorch version: 2.7.0+cu126
+CUDA available: True
+GPU count: 1
+GPU 0: Tesla T4
+  Memory: 15.56 GB
+
+==================================================
+2025-04-30 19:47:00.103128: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1746042420.123162    5269 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1746042420.129324    5269 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1746042420.145486    5269 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1746042420.145513    5269 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1746042420.145517    5269 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1746042420.145521    5269 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+2025-04-30 19:47:00.150053: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+TensorFlow version: 2.19.0
+TensorFlow GPU devices: 1
+  PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')
+I0000 00:00:1746042421.867216    5269 gpu_device.cc:2019] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 14780 MB memory:  -> device: 0, name: Tesla T4, pci bus id: 0001:00:00.0, compute capability: 7.5
+Successfully executed TensorFlow operation on GPU
+
+==================================================
+Ollama version: ollama version is 0.6.6
+Ollama models:
+NAME                                ID              SIZE      MODIFIED
+Pygmalion-3-12B-Q3_K.gguf:latest    0acb33875e49    6.1 GB    25 minutes ago
+
+
+==================================================
+
+Check complete!
