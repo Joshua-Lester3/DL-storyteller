@@ -60,4 +60,4 @@ else
 fi
 
 echo "Running Python app..."
-~/DL-storyteller/src/.venv/bin/python3 app2.py
+~/DL-storyteller/src/.venv/bin/python3 app.py
