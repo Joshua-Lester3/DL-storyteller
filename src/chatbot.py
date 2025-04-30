@@ -8,10 +8,10 @@ class ChatBot():
         # Path to your local GGUF model file
         model_path = self.load_model()
         # Alias under which Ollama will store the model
-        model_alias = "Pygmalion-3-12B-Q3_K.gguf"
+        self.model_alias = "Pygmalion-3-12B-Q3_K.gguf"
 
         # Ensure the model is available in Ollama
-        self.ensure_model(model_path, model_alias)   
+        self.ensure_model(model_path)   
 
     def prompt(self, prompt):
         response = self.generate_response(prompt)
@@ -33,24 +33,24 @@ class ChatBot():
 
         return model_path
 
-    def ensure_model(self, model_path, model_alias):
+    def ensure_model(self, model_path):
         """
         Pulls a local GGUF model into Ollama's registry under the given alias.
         If already present, this is a no-op.
         """
-        print(f"Ensuring Ollama model '{model_alias}' from '{model_path}'...")
+        print(f"Ensuring Ollama model '{self.model_alias}' from '{model_path}'...")
         client = Client()
         digest = client.create_blob(model_path)
-        create(model=model_alias, files={model_alias: digest})
-        print(f"Model '{model_alias}' is ready to use.")
+        create(model=self.model_alias, files={self.model_alias: digest})
+        print(f"Model '{self.model_alias}' is ready to use.")
 
 
-    def generate_response(self, prompt: str, model_alias: str) -> str:
+    def generate_response(self, prompt: str) -> str:
         """
         Generates a one-shot response using Ollama's generate API.
         """
         resp = generate(
-            model=model_alias,
+            model=self.model_alias,
             prompt=prompt,
         )
         return resp['response'].strip()
