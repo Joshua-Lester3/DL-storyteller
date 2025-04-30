@@ -124,7 +124,12 @@ class TextPagerApp(App[None]):
         self.refresh(layout=True)
 
         # Run blocking LLM call in thread
-        _, response = await asyncio.to_thread(self.chatbot.prompt, prompt)
+        try:
+            _, response = await asyncio.to_thread(self.chatbot.prompt, prompt)
+        except Exception as err:
+            response = f"[red]Error:[/] {err}"
+        finally:
+            spinner.display = False
 
         # Hide spinner and update pages
         spinner.display = False
