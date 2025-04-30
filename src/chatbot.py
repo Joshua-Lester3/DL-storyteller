@@ -52,5 +52,11 @@ class ChatBot():
         resp = generate(
             model=self.model_alias,
             prompt=prompt,
+            options={
+                "gpu_layers": 99,  # Use as many layers on GPU as possible
+                "temperature": 0.7,
+                "top_p": 0.9,
+                "num_predict": 2048  # Max tokens to generate
+            }
         )
         return resp['response'].strip()
