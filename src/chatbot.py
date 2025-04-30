@@ -1,5 +1,6 @@
 from ollama import create, generate, Client
 import os
+import subprocess
 from huggingface_hub import hf_hub_download
 
 class ChatBot():
@@ -40,14 +41,43 @@ class ChatBot():
         """
         print(f"Ensuring Ollama model '{self.model_alias}' from '{model_path}'...")
         client = Client()
-        digest = client.create_blob(model_path)
+        try:
+            
+            digest = client.create_blob(model_path)
 
-        modelfile_content = f"""
-              FROM {self.model_alias}
-              PARAMETER temperature 0.7
-              PARAMETER top_p 0.9
-              PARAMETER gpu_layers 99
-        """
+            create(model=self.model_alias, files={self.model_alias: digest})
+
+            try:
+                print("Attempting to enable GPU acceleration via command line...")
+                # Create a temporary modelfile
+                modelfile_path = "/tmp/modelfile.txt"
+                with open(modelfile_path, "w") as f:
+                    f.write(f"""FROM {self.model_alias}
+                            PARAMETER temperature 0.7
+                            PARAMETER top_p 0.9
+                            PARAMETER gpu_layers 99
+                            """)
+                # Use the Ollama CLI to create model with GPU support
+                cmd = f"ollama create {self.model_alias} -f {modelfile_path}"
+                process = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                
+                if process.returncode == 0:
+                    print("Successfully enabled GPU acceleration for the model.")
+                else:
+                    print(f"Warning: Could not enable GPU via modelfile: {process.stderr}")
+                
+                # Clean up
+                os.remove(modelfile_path)
+            except Exception as e:
+                print(f"Warning: Could not enable GPU via CLI: {e}")
+                print("Falling back to runtime GPU activation.")
+        except Exception as e:
+            print(f"Error ensuring model: {e}")
+            raise
+
+        print(f"Model '{self.model_alias}' is ready to use.")
+            
+
         create(model=self.model_alias, modelfile=modelfile_content, files={self.model_alias: digest})
         print(f"Model '{self.model_alias}' is ready to use.")
 
