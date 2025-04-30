@@ -76,10 +76,6 @@ class ChatBot():
             raise
 
         print(f"Model '{self.model_alias}' is ready to use.")
-            
-
-        create(model=self.model_alias, modelfile=modelfile_content, files={self.model_alias: digest})
-        print(f"Model '{self.model_alias}' is ready to use.")
 
 
     def generate_response(self, prompt: str) -> str:
