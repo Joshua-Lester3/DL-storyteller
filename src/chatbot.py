@@ -55,7 +55,7 @@ class ChatBot():
                     f.write(f"""FROM {self.model_alias}
                             PARAMETER temperature 0.7
                             PARAMETER top_p 0.9
-                            PARAMETER gpu_layers 99
+                            SYSTEM gpu
                             """)
                 # Use the Ollama CLI to create model with GPU support
                 cmd = f"ollama create {self.model_alias} -f {modelfile_path}"
