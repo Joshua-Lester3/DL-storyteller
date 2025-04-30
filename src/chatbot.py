@@ -119,4 +119,4 @@ class ChatBot():
         self.chat_history.append(message)
         self.chat_history.append(assistant_message)
 
-        return resp['response'].strip()
+        return resp['message']['content'].strip()
