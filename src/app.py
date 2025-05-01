@@ -64,7 +64,7 @@ class TextPagerApp(App[None]):
             resp = page.get("response", "")
         else:
             resp = page
-            
+
         yield Pager(resp, id="pager")
         yield PromptDisplay("", id="prompt_display")
         yield Input(placeholder="Type and press Enter to add a page...", id="cmd_input")
@@ -117,14 +117,14 @@ class TextPagerApp(App[None]):
         # Add input text as a new page and display it
         prompt = event.value.strip()
         if not prompt:
-            if self.first_prompt:    
+            if self.first_prompt:
                 prompt = "You are a dungeon master in a fantasy text adventure. Respond to the player's commands with vivid, " \
                 "story-driven descriptions and react to their actions. Keep the world internally consistent. " \
                 "Do not advance time unless the player acts. Never take control of the player's character. " \
                 "The story begins with the player in a cave chained to a wall. Begin"
             else:
                 return
-        
+
         # Show spinner while waiting
         spinner = self.query_one(LoadingIndicator)
         spinner.display = True
@@ -152,7 +152,16 @@ if __name__ == "__main__":
     chatbot = ChatBot()
     # Initialize with only the first page
     sample_pages = [
-        { "response": "Hello, welcome to our text adventure app. This is powered by Ollama and PygmalionAI. Press enter below to start. Use arrow keys to navigate between pages.",
+        { "response": r"""
+  __                   __                   .___                    __
+_/  |_  ____ ___  ____/  |_     _____     __| _/__  __ ____   _____/  |_ __ _________   ____
+\   __\/ __ \\  \/  /\   __\    \__  \   / __ |\  \/ // __ \ /    \   __\  |  \_  __ \_/ __ \
+ |  | \  ___/ >    <  |  |       / __ \_/ /_/ | \   /\  ___/|   |  \  | |  |  /|  | \/\  ___/
+ |__|  \___  >__/\_ \ |__|      (____  /\____ |  \_/  \___  >___|  /__| |____/ |__|    \___  >
+           \/      \/                \/      \/           \/     \/                        \/
+
+
+Press [green]Enter[/] to continue...""",
          "prompt": None
         }
     ]
