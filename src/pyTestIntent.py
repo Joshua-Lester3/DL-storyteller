@@ -14,7 +14,7 @@ classifier = pipeline("zero-shot-classification") # intent classifier model from
 
 # Define possible intents
 intents = [    
-    "Move",
+    # "Move",
     "Use",
     "Take",
     "Drop",
@@ -109,12 +109,12 @@ def handle_input(text):
 
 # Test it with sample input
 user_inputs = [
-    "Use the key on the door",
+    "Unlock the door with the key",
     "Show me my inventory",
-    "Take the sword",
-    "Examine the gate",
+    "Grab the sword",
+    "Look at the gate",
     "Go north",
-    "Drop armor"
+    "Remove armor"
 ]
 
 # Sample inventory and environment
