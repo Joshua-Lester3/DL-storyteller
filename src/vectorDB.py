@@ -22,6 +22,7 @@ class VectorDB:
         # Stores actual summaries for lookup
         self.index = faiss.GpuIndexFlatL2(self.res, 384)
 
+    # Text is generated from the language model, summarize and put into vdb
     def add_text(self, text):
         '''Summarizes output text from the language model, and adds it to the vdb
         text is a string (should be output from the language model)
@@ -49,10 +50,19 @@ class VectorDB:
         # Return the summarized text
         return summary
 
+    # Query with the player input
     def query(self, text, top_k = 3):
         '''Returns summaries that are similar to the text
         text is a string that you want to query
         top_k is an int that queries for top_k similar summaries'''
+
+        # cannot query if there is nothing to search for
+        if len(self.summaries) == 0:
+            return []
+
+        # If there are less than top_k summaries
+        # dynamically adjusts the top_k based on how many entries
+        top_k = min(top_k, len(self.summaries))
 
         # Get the embedding of input text
         txt_embedding = self.embedder.encode([text])
@@ -65,6 +75,7 @@ class VectorDB:
 
         # List comprehension, fetching all the summaries 
         # index is in I, and self.summaries store the text summaries
+        # Append this to the prompt to the language model
         return [self.summaries[i] for i in I[0]]
 
 
