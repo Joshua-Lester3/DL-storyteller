@@ -3,6 +3,8 @@ import os
 import subprocess
 from huggingface_hub import hf_hub_download
 
+from vectorDB import VectorDB
+
 class ChatBot():
 
     def __init__(self):
@@ -12,6 +14,8 @@ class ChatBot():
         self.model_alias = "Pygmalion-3-12B-Q3_K.gguf"
 
         self.chat_history = []
+
+        self.vdb = VectorDB()
 
         # Ensure the model is available in Ollama
         self.ensure_model(model_path)   
@@ -84,6 +88,13 @@ class ChatBot():
         """
         Generates a one-shot response using Ollama's generate API.
         """
+        relevant_list = self.vdb.query(prompt)
+        relevant_info = ""
+        if len(relevant_list) > 0:
+            relevant_info = f"\nMost relevant info to prompt: {relevant_list[0]}, "
+            for i in range(1, len(relevant_list)):
+                relevant_info += f", {relevant_list[i]}"
+        prompt = f"Prompt from user: {prompt}{relevant_info}"
         message = {"role": "user", "content": prompt}
 
         resp = chat(
@@ -115,6 +126,8 @@ class ChatBot():
                 "role": "assistant",
                 "content": assistant_message['content']
             }
+
+        assistant_message["content"] = self.vdb.add_text(assistant_message["content"])
 
         self.chat_history.append(message)
         self.chat_history.append(assistant_message)
