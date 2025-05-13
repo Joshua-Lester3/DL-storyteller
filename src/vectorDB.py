@@ -2,7 +2,7 @@
 
 from transformers import pipeline, AutoTokenizer
 from sentence_transformers import SentenceTransformer
-import faiss
+import faiss_gpu as faiss
 import numpy as np
 
 class VectorDB:
@@ -18,8 +18,9 @@ class VectorDB:
 
         # FAISS index setup. MiniLM embedding creates a vector of length 384
         self.summaries = []  
+        self.res = faiss.StandardGpuResources()
         # Stores actual summaries for lookup
-        self.index = faiss.IndexFlatL2(384)
+        self.index = faiss.GpuIndexFlatL2(self.res, 384)
 
     def add_text(self, text):
         '''Summarizes output text from the language model, and adds it to the vdb
