@@ -2,7 +2,7 @@
 
 from transformers import pipeline, AutoTokenizer
 from sentence_transformers import SentenceTransformer
-import faiss_gpu as faiss
+import faiss
 import numpy as np
 
 class VectorDB:
