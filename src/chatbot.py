@@ -18,7 +18,7 @@ class ChatBot():
         self.vdb = VectorDB()
 
         # Ensure the model is available in Ollama
-        self.ensure_model(model_path)   
+        self.ensure_model(model_path)
 
     def prompt(self, prompt):
         response = self.generate_response(prompt)
@@ -48,7 +48,7 @@ class ChatBot():
         print(f"Ensuring Ollama model '{self.model_alias}' from '{model_path}'...")
         client = Client()
         try:
-            
+
             digest = client.create_blob(model_path)
 
             create(model=self.model_alias, files={self.model_alias: digest})
@@ -66,12 +66,12 @@ class ChatBot():
                 # Use the Ollama CLI to create model with GPU support
                 cmd = f"ollama create {self.model_alias} -f {modelfile_path}"
                 process = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-                
+
                 if process.returncode == 0:
                     print("Successfully enabled GPU acceleration for the model.")
                 else:
                     print(f"Warning: Could not enable GPU via modelfile: {process.stderr}")
-                
+
                 # Clean up
                 os.remove(modelfile_path)
             except Exception as e:
@@ -118,7 +118,7 @@ class ChatBot():
         #         "num_predict": 2048  # Max tokens to generate
         #     }
         # )
-        
+
         assistant_message = resp['message']
 
         if 'role' not in assistant_message or assistant_message['role'] != 'assistant':
@@ -127,7 +127,7 @@ class ChatBot():
                 "content": assistant_message['content']
             }
 
-        assistant_message["content"] = self.vdb.add_text(assistant_message["content"])
+        self.vdb.add_text(assistant_message["content"])
 
         self.chat_history.append(message)
         self.chat_history.append(assistant_message)
