@@ -168,9 +168,6 @@ class TextPagerApp(App[None]):
         self.set_focus(self.query_one(Pager))
 
     async def helper(self, prompt: str):
-        if not prompt:
-            return
-
         # Show spinner while waiting
         spinner = self.query_one(LoadingIndicator)
         spinner.display = True
