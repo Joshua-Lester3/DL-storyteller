@@ -14,9 +14,9 @@ class SelectionScreen(Screen[int]):
     def compose(self) -> ComposeResult:
         yield Static("Select an option:", id="prompt_selection")
         yield ListView(
-            ListItem(Static("Option 1"), id="0"),
-            ListItem(Static("Option 2"), id="1"),
-            ListItem(Static("Option 3"), id="2"),
+            ListItem(Static("Option 1"), id="option0"),
+            ListItem(Static("Option 2"), id="option1"),
+            ListItem(Static("Option 3"), id="option2"),
             id="options_list",
         )
         yield Static("", id="result_selection")
@@ -31,7 +31,7 @@ class SelectionScreen(Screen[int]):
         }
         result_widget.update(messages.get(choice_id, f"Selected: {choice_id}"))
         # After selection, return to main application view
-        self.dismiss(int(choice_id))
+        self.dismiss(int(choice_id[-1]))
 
 
 
