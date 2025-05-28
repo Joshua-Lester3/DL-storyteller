@@ -1,8 +1,39 @@
 from textual.app import App, ComposeResult
-from textual.widgets import Input, Static, LoadingIndicator, Footer
+from textual.widgets import ListView, ListItem, Input, Static, LoadingIndicator, Footer
 from textual.binding import Binding
+from textual.screen import Screen
 from chatbot import ChatBot
 import asyncio
+
+
+class SelectionScreen(Screen[int]):
+    """
+    A screen that presents a list of options using ListView
+    and updates the display based on the selected option.
+    """
+    def compose(self) -> ComposeResult:
+        yield Static("Select an option:", id="prompt_selection")
+        yield ListView(
+            ListItem(Static("Option 1"), id="0"),
+            ListItem(Static("Option 2"), id="1"),
+            ListItem(Static("Option 3"), id="2"),
+            id="options_list",
+        )
+        yield Static("", id="result_selection")
+
+    def on_list_view_selected(self, event: ListView.Selected) -> None:
+        result_widget = self.query_one("#result_selection", Static)
+        choice_id = event.item.id
+        messages = {
+            "option1": "You chose Option 1!",
+            "option2": "You chose Option 2!",
+            "option3": "You chose Option 3!",
+        }
+        result_widget.update(messages.get(choice_id, f"Selected: {choice_id}"))
+        # After selection, return to main application view
+        self.dismiss(int(choice_id))
+
+
 
 class Pager(Static):
     """
@@ -71,6 +102,12 @@ class TextPagerApp(App[None]):
         yield LoadingIndicator(id="loading")
         yield Footer()
 
+    def on_ready(self) -> None:
+        def check_result(choice: int | None) -> None:
+            if choice is not None:
+                self.choice = choice
+        self.choice = self.push_screen(SelectionScreen(), wait_for_dismiss=True)
+
     def on_mount(self) -> None:
         self.query_one(PromptDisplay).display = False
         self.query_one(LoadingIndicator).display = False
@@ -118,10 +155,10 @@ class TextPagerApp(App[None]):
         prompt = event.value.strip()
         if not prompt:
             if self.first_prompt:
-                prompt = "You are a dungeon master in a fantasy text adventure. Respond to the player's commands with vivid, " \
-                "story-driven descriptions and react to their actions. Keep the world internally consistent. " \
-                "Do not advance time unless the player acts. Never take control of the player's character. " \
-                "The story begins with the player in a cave chained to a wall. Begin"
+                with open('/home/azureuser/DL-storyteller/docs/stories.txt', 'r', encoding='utf-8') as f:
+                    text = f.read()
+                    stories = text.split('---')
+                prompt = stories[self.choice]
             else:
                 return
 
