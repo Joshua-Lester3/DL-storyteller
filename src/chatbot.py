@@ -132,4 +132,4 @@ class ChatBot():
         self.chat_history.append(message)
         self.chat_history.append(assistant_message)
 
-        return resp['message']['content'].strip() + f"\nRelevant info: {relevant_info}"
+        return resp['message']['content'].strip() # + f"\nRelevant info: {relevant_info}"

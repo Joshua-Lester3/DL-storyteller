@@ -14,9 +14,9 @@ class SelectionScreen(Screen[int]):
     def compose(self) -> ComposeResult:
         yield Static("Select an option:", id="prompt_selection")
         yield ListView(
-            ListItem(Static("Option 1"), id="option0"),
-            ListItem(Static("Option 2"), id="option1"),
-            ListItem(Static("Option 3"), id="option2"),
+            ListItem(Static("Solo explorer crash landed on mysterious floating island in the sky."), id="option0"),
+            ListItem(Static("You're a child in an orphanage. But something strange is going on, and something is wrong with this place."), id="option1"),
+            ListItem(Static("You're chained in a cave dungeon. What will you do?!"), id="option2"),
             id="options_list",
         )
         yield Static("", id="result_selection")
