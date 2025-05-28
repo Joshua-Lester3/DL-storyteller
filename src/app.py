@@ -119,7 +119,7 @@ class TextPagerApp(App[None]):
                     text = f.read()
                     stories = text.split('---')
                 prompt = stories[self.choice]
-                self.
+                self.helper(prompt)
 
         self.push_screen(SelectionScreen(), callback=check_result)
 
@@ -181,7 +181,13 @@ class TextPagerApp(App[None]):
             response = f"[red]Error:[/] {err}"
         finally:
             spinner.display = False
+        spinner.display = False
+        last_index = len(self.pages) - 1
+        self.pages[last_index]["prompt"] = prompt
+        self.pages.append({"response": response, "prompt": None})
+        self.current_index = len(self.pages) - 1
 
+        self.update_view()
         return response
 
 
@@ -190,16 +196,10 @@ class TextPagerApp(App[None]):
         # Add input text as a new page and display it
         prompt = event.value.strip()
         # Hide spinner and update pages
+        event.input.value = ""
 
         response = await self.helper(prompt)
-        spinner.display = False
-        last_index = len(self.pages) - 1
-        self.pages[last_index]["prompt"] = prompt
-        self.pages.append({"response": response, "prompt": None})
-        self.current_index = len(self.pages) - 1
-        event.input.value = ""
         # Return focus to pager so arrow keys work
-        self.update_view()
 
 if __name__ == "__main__":
     chatbot = ChatBot()
