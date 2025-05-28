@@ -112,7 +112,7 @@ class TextPagerApp(App[None]):
         yield Footer()
 
     async def on_ready(self) -> None:
-        def check_result(choice: int | None) -> None:
+        async def check_result(choice: int | None) -> None:
             if choice is not None:
                 self.choice = choice
                 with open('/home/azureuser/DL-storyteller/docs/stories.txt', 'r', encoding='utf-8') as f:
@@ -123,7 +123,7 @@ class TextPagerApp(App[None]):
                 page = self.pages[self.current_index]
                 page["response"] = resp
 
-        self.push_screen(SelectionScreen(), callback=check_result)
+        await self.push_screen(SelectionScreen(), callback=check_result)
 
     def on_mount(self) -> None:
         self.query_one(PromptDisplay).display = False
