@@ -111,7 +111,7 @@ class TextPagerApp(App[None]):
         yield LoadingIndicator(id="loading")
         yield Footer()
 
-    def on_ready(self) -> None:
+    async def on_ready(self) -> None:
         def check_result(choice: int | None) -> None:
             if choice is not None:
                 self.choice = choice
@@ -119,7 +119,7 @@ class TextPagerApp(App[None]):
                     text = f.read()
                     stories = text.split('---')
                 prompt = stories[self.choice]
-                resp = self.helper(prompt)
+                resp = await self.helper(prompt)
                 page = self.pages[self.current_index]
                 page["response"] = resp
 
@@ -168,6 +168,9 @@ class TextPagerApp(App[None]):
         self.set_focus(self.query_one(Pager))
 
     async def helper(self, prompt: str):
+        if not prompt:
+            return
+
         # Show spinner while waiting
         spinner = self.query_one(LoadingIndicator)
         spinner.display = True
