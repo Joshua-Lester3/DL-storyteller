@@ -12,7 +12,17 @@ class SelectionScreen(Screen[int]):
     and updates the display based on the selected option.
     """
     def compose(self) -> ComposeResult:
-        yield Static("Select an option:", id="prompt_selection")
+        logo = r"""
+  __                   __                   .___                    __
+_/  |_  ____ ___  ____/  |_     _____     __| _/__  __ ____   _____/  |_ __ _________   ____
+\   __\/ __ \\  \/  /\   __\    \__  \   / __ |\  \/ // __ \ /    \   __\  |  \_  __ \_/ __ \
+ |  | \  ___/ >    <  |  |       / __ \_/ /_/ | \   /\  ___/|   |  \  | |  |  /|  | \/\  ___/
+ |__|  \___  >__/\_ \ |__|      (____  /\____ |  \_/  \___  >___|  /__| |____/ |__|    \___  >
+           \/      \/                \/      \/           \/     \/                        \/
+
+"""
+        yield Static(logo)
+        yield Static("Select an option to begin:", id="prompt_selection")
         yield ListView(
             ListItem(Static("Solo explorer crash landed on mysterious floating island in the sky."), id="option0"),
             ListItem(Static("You're a child in an orphanage. But something strange is going on, and something is wrong with this place."), id="option1"),
@@ -82,12 +92,11 @@ class TextPagerApp(App[None]):
     }
     """
 
-    def __init__(self, pages: list[str], chatbot, **kwargs):
+    def __init__(self, chatbot, **kwargs):
         super().__init__(**kwargs)
-        self.pages = pages
+        self.pages = []
         self.current_index = 0
         self.chatbot = chatbot
-        self.first_prompt = True
 
     def compose(self) -> ComposeResult:
         page = self.pages[self.current_index]
@@ -106,6 +115,12 @@ class TextPagerApp(App[None]):
         def check_result(choice: int | None) -> None:
             if choice is not None:
                 self.choice = choice
+                with open('/home/azureuser/DL-storyteller/docs/stories.txt', 'r', encoding='utf-8') as f:
+                    text = f.read()
+                    stories = text.split('---')
+                prompt = stories[self.choice]
+                self.
+
         self.push_screen(SelectionScreen(), callback=check_result)
 
     def on_mount(self) -> None:
@@ -150,17 +165,9 @@ class TextPagerApp(App[None]):
     def action_unfocus_input(self) -> None:
         self.set_focus(self.query_one(Pager))
 
-    async def on_input_submitted(self, event: Input.Submitted) -> None:
-        # Add input text as a new page and display it
-        prompt = event.value.strip()
+    async def helper(self, prompt: str):
         if not prompt:
-            if self.first_prompt:
-                with open('/home/azureuser/DL-storyteller/docs/stories.txt', 'r', encoding='utf-8') as f:
-                    text = f.read()
-                    stories = text.split('---')
-                prompt = stories[self.choice]
-            else:
-                return
+            return
 
         # Show spinner while waiting
         spinner = self.query_one(LoadingIndicator)
@@ -175,7 +182,16 @@ class TextPagerApp(App[None]):
         finally:
             spinner.display = False
 
+        return response
+
+
+
+    async def on_input_submitted(self, event: Input.Submitted) -> None:
+        # Add input text as a new page and display it
+        prompt = event.value.strip()
         # Hide spinner and update pages
+
+        response = await self.helper(prompt)
         spinner.display = False
         last_index = len(self.pages) - 1
         self.pages[last_index]["prompt"] = prompt
@@ -188,19 +204,5 @@ class TextPagerApp(App[None]):
 if __name__ == "__main__":
     chatbot = ChatBot()
     # Initialize with only the first page
-    sample_pages = [
-        { "response": r"""
-  __                   __                   .___                    __
-_/  |_  ____ ___  ____/  |_     _____     __| _/__  __ ____   _____/  |_ __ _________   ____
-\   __\/ __ \\  \/  /\   __\    \__  \   / __ |\  \/ // __ \ /    \   __\  |  \_  __ \_/ __ \
- |  | \  ___/ >    <  |  |       / __ \_/ /_/ | \   /\  ___/|   |  \  | |  |  /|  | \/\  ___/
- |__|  \___  >__/\_ \ |__|      (____  /\____ |  \_/  \___  >___|  /__| |____/ |__|    \___  >
-           \/      \/                \/      \/           \/     \/                        \/
-
-
-Press [green]Enter[/] to continue...""",
-         "prompt": None
-        }
-    ]
-    app = TextPagerApp(pages=sample_pages, chatbot=chatbot)
+    app = TextPagerApp(chatbot=chatbot)
     app.run()
