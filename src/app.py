@@ -106,7 +106,7 @@ class TextPagerApp(App[None]):
         def check_result(choice: int | None) -> None:
             if choice is not None:
                 self.choice = choice
-        self.choice = self.push_screen(SelectionScreen(), wait_for_dismiss=True)
+        self.push_screen(SelectionScreen(), callback=check_result)
 
     def on_mount(self) -> None:
         self.query_one(PromptDisplay).display = False
