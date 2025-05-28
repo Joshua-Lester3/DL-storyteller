@@ -94,7 +94,7 @@ class TextPagerApp(App[None]):
 
     def __init__(self, chatbot, **kwargs):
         super().__init__(**kwargs)
-        self.pages = []
+        self.pages = [{"response" : "", "prompt": ""}]
         self.current_index = 0
         self.chatbot = chatbot
 
@@ -119,7 +119,9 @@ class TextPagerApp(App[None]):
                     text = f.read()
                     stories = text.split('---')
                 prompt = stories[self.choice]
-                self.helper(prompt)
+                resp = self.helper(prompt)
+                page = self.pages[self.current_index]
+                page["response"] = resp
 
         self.push_screen(SelectionScreen(), callback=check_result)
 
