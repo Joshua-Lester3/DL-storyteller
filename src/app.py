@@ -7,10 +7,6 @@ import asyncio
 
 
 class SelectionScreen(Screen[int]):
-    """
-    A screen that presents a list of options using ListView
-    and updates the display based on the selected option.
-    """
     def compose(self) -> ComposeResult:
         logo = r"""
   __                   __                   .___                    __
@@ -128,7 +124,6 @@ class TextPagerApp(App[None]):
     def on_mount(self) -> None:
         self.query_one(PromptDisplay).display = False
         self.query_one(LoadingIndicator).display = False
-        # Ensure initial focus and correct widget visibility
         self.update_view()
         self.set_focus(self.query_one(Input))
 
@@ -170,13 +165,9 @@ class TextPagerApp(App[None]):
     async def helper(self, prompt: str):
         if not prompt:
             return
-
-        # Show spinner while waiting
         spinner = self.query_one(LoadingIndicator)
         spinner.display = True
         self.refresh(layout=True)
-
-        # Run blocking LLM call in thread
         try:
             _, response = await asyncio.to_thread(self.chatbot.prompt, prompt)
         except Exception as err:
@@ -195,16 +186,12 @@ class TextPagerApp(App[None]):
 
 
     async def on_input_submitted(self, event: Input.Submitted) -> None:
-        # Add input text as a new page and display it
         prompt = event.value.strip()
-        # Hide spinner and update pages
         event.input.value = ""
 
         response = await self.helper(prompt)
-        # Return focus to pager so arrow keys work
 
 if __name__ == "__main__":
     chatbot = ChatBot()
-    # Initialize with only the first page
     app = TextPagerApp(chatbot=chatbot)
     app.run()
